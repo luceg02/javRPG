@@ -1,21 +1,4 @@
-## Structure general du projet ##
+## Structure Générale du Projet ##
 
 
-- GameObject (classe de base)
-   ├── Entity (pour monstres et obstacles)
-   │   ├── Monster
-   │   └── Obstacle
-   └── Character (pour les personnages jouables)
-       ├── Mage
-       ├── Elf
-       └── Warrior
-
-- Weapon (classe de base)
-   ├── Sword
-   ├── Axe
-   └── Bow
-
-- Autres classes
-   ├── Game (classe principale)
-   ├── Dungeon (gestion de la carte)
-   └── Shop (magasin d'armes)
+![image](https://github.com/user-attachments/assets/37149dff-a35a-4944-8720-df4cc4cc3346)
