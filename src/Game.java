@@ -188,8 +188,4 @@ public class Game {
             System.out.println("XP Gained: " + player.getXp());
         }
     }
-
-    public static void main(String[] args) {
-        new Game();
-    }
 }

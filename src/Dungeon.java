@@ -113,13 +113,22 @@ public class Dungeon {
         System.out.printf("You encounter a %s! (HP: %d | Attack: %d)%n",
                 monster.getName(), monster.getHp(), monster.attack());
         System.out.println("1. Fight");
-        System.out.println("2. Run");
+        System.out.println("2. Run (Will cost you HP)");
 
         try {
-            if (Integer.parseInt(scanner.nextLine()) == 1) {
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (choice == 1) {
+                // Combat : il faut tuer le monstre pour passer
                 return executeCombat(monster, y, x);
+            } else if (choice == 2) {
+                // Fuite : on prend des dégâts mais on peut passer
+                int runDamage = monster.attack();
+                player.takeDamage(runDamage);
+                System.out.printf("You run away but take %d damage! (Your HP: %d/%d)%n",
+                        runDamage, player.getHp(), player.getMaxHp());
+                map[y][x] = null;  // Le monstre disparaît quand même
+                return true;
             }
-            System.out.println("You run away from the fight!");
             return false;
         } catch (NumberFormatException e) {
             System.out.println("Invalid choice! Retreating...");
@@ -128,30 +137,18 @@ public class Dungeon {
     }
 
     private boolean executeCombat(Monster monster, int y, int x) {
-        while (!monster.isDead() && !player.isDead()) {
-            // Player's turn
+        while (!monster.isDead()) {
             int playerDamage = player.attack();
             monster.takeDamage(playerDamage);
             System.out.printf("%nYou deal %d damage!%n", playerDamage);
+            System.out.printf("Monster HP: %d/%d%n", monster.getHp(), monster.getMaxHp());
 
-            if (!monster.isDead()) {
-                // Monster's turn
-                int monsterDamage = monster.attack();
-                player.takeDamage(monsterDamage);
-                System.out.printf("Monster deals %d damage!%n", monsterDamage);
-
-                // Status update
-                System.out.printf("%nStatus:%nYour HP: %d/%d%nMonster HP: %d/%d%n",
-                        player.getHp(), player.getMaxHp(),
-                        monster.getHp(), monster.getMaxHp());
+            if (monster.isDead()) {
+                System.out.printf("%nVictory! The %s has been defeated!%n", monster.getName());
+                player.gainXP(COMBAT_XP_REWARD);
+                map[y][x] = null;
+                return true;
             }
-        }
-
-        if (!player.isDead()) {
-            System.out.printf("%nVictory! The %s has been defeated!%n", monster.getName());
-            player.gainXP(COMBAT_XP_REWARD);
-            map[y][x] = null;
-            return true;
         }
         return false;
     }
